@@ -1,20 +1,19 @@
-import Adafruit_DHT as DHT
+import board
+import adafruit_dht
 import pymysql.cursors
 
 
 def get_dht():
-    # センサーの種類
-    SENSOR_TYPE = DHT.DHT22
-
-    # 接続したGPIOポート
-    DHT_GPIO = 22
+    # 接続したGPIOポート:22
+    dhtDevice = adafruit_dht.DHT22(board.D22)
 
     # 測定開始
-    h, t = DHT.read_retry(SENSOR_TYPE, DHT_GPIO)
+    t = dhtDevice.temperature
+    h = dhtDevice.humidity
 
     r = {"temp": t, "hum": h}
-    # print(r)
 
+    # print(r)
     r['temp'] = round(r['temp'], 2)
     r['hum'] = round(r['hum'] / 100, 4)
 
