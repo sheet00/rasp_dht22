@@ -1,0 +1,3 @@
+adafruit-circuitpython-dht
+PyMySQL
+python-dotenv
