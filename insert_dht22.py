@@ -125,10 +125,10 @@ def get_dht():
 
 
 def get_connect():
-    conn = pymysql.connect(host=os.environ.get('POSTGRES_HOST'),
-                           user=os.environ.get('POSTGRES_USER'),
-                           password=os.environ.get('POSTGRES_PASSWORD'),
-                           db=os.environ.get('POSTGRES_DB'),
+    conn = pymysql.connect(host=os.environ.get('MYSQL_HOST'),
+                           user=os.environ.get('MYSQL_USER'),
+                           password=os.environ.get('MYSQL_PASSWORD'),
+                           db=os.environ.get('MYSQL_DB'),
                            charset='utf8mb4',
                            cursorclass=pymysql.cursors.DictCursor)
 
