@@ -94,8 +94,18 @@ def is_safe(dht):
 
 
 def get_dht():
-    # 接続したGPIOポート:22
-    dhtDevice = adafruit_dht.DHT22(board.D22)
+    # .envからGPIOポートを読み込む
+    gpio_port = os.environ.get('DHT22_GPIO_PORT')
+    if gpio_port is None:
+        print("DHT22_GPIO_PORTが.envファイルに設定されていません。")
+        return None
+    try:
+        gpio_port = getattr(board, gpio_port)
+    except AttributeError:
+        print(f"無効なGPIOポート名: {gpio_port}")
+        return None
+
+    dhtDevice = adafruit_dht.DHT22(gpio_port)
 
     #Simple test — Adafruit CircuitPython DHT Library 1.0 documentation https://docs.circuitpython.org/projects/dht/en/latest/examples.html#id1
     is_success = False
