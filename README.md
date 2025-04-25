@@ -9,6 +9,7 @@
 1.  必要なPythonパッケージをインストールします。
 
     ```bash
+    sudo apt-get update && sudo apt-get install liblgpio-dev
     pip install -r requirements.txt
     ```
 
