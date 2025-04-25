@@ -9,10 +9,11 @@ from dotenv import load_dotenv
 
 def main():
     load_dotenv()
+    log("-------")
     dht = get_dht()
-    print(dht)
+    print(f"{dht=}")
 
-    if is_safe(dht):
+    if validate_temperature_range(dht):
             mysql_insert(dht)
 
 
@@ -64,7 +65,7 @@ limit
 
             results = cursor.fetchall()
             for r in results:
-                print(r)
+                print(f"mysql_select_avg {r=}")
     finally:
         conn.close()
 
@@ -73,25 +74,24 @@ limit
 
 # 取得温度のぶれ幅検証
 # 上下N度以内か判定
-def is_safe(dht):
+def validate_temperature_range(dht):
     RANGE = 12
 
     avg = mysql_select_avg()
     _min = avg['avg'] - RANGE
     _max = avg['avg'] + RANGE
 
-    log('min %f' % _min )
-    log('max %f' % _max)
-    log('avg %f' % avg['avg'])
-    log('dht %f' % dht['temp'])
+    log("[上下N度以内か判定]")
+    log('直近のavg %f' % avg['avg'])
+    log('insert許可 min %f' % _min )
+    log('insert許可 max %f' % _max)
+    log('取得したtemp %f' % dht['temp'])
 
+    is_valid = False
     if _min <= dht['temp'] and dht['temp'] <= _max:
-        log('true')
-        return True
-    else:
-        log('false')
-        return False
+        is_valid = True
 
+    log(f'insert許可 {is_valid=}')
 
 def get_dht():
     # .envからGPIOポートを読み込む
@@ -118,7 +118,7 @@ def get_dht():
 
         except RuntimeError as error:
             # Errors happen fairly often, DHT's are hard to read, just keep going
-            print(error.args[0])
+            print(f"{error.args[0]=}")
             time.sleep(2.0)
             continue
         except Exception as error:
